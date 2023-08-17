@@ -74,7 +74,6 @@ WSGI_APPLICATION = "api_ecommerce.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
 if DEVELOPMENT_MODE:
     DATABASES = {
         "default": {    
@@ -181,7 +180,6 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DOMAIN = os.getenv("DOMAIN")
 SITE_NAME = "Ecommerce Store"
-
 
 # GOOGLE OAUTH2 SETTINGS
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY= os.getenv('GOOGLE_AUTH_KEY')
