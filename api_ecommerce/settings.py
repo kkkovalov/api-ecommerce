@@ -13,10 +13,12 @@ if os.path.isfile(dotenv_file):
     load_dotenv(dotenv_file)
     
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-DEBUG = bool(os.environ.get("DJANGO_DEBUG", False))
-DEVELOPMENT_MODE = bool(os.getenv('DEVELOPMENT_MODE', default=False))
-
-ALLOWED_HOSTS = ['*']
+DEBUG = os.environ.get("DJANGO_DEBUG", default='False') == 'False'
+DEVELOPMENT_MODE = os.getenv('DEVELOPMENT_MODE', default='False') == 'False'
+if DEVELOPMENT_MODE:
+    ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", default="http://127.0.0.1:8000").split(',')
+else:
+    ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", 'https://localhost:8000,http://127.0.0.1:8000').split(',')
 CORS_ALLOWED_CREDENTIALS = True
@@ -74,16 +76,28 @@ WSGI_APPLICATION = "api_ecommerce.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {    
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": str(os.getenv("DB_NAME")),
-        "USER": str(os.getenv("DB_USER")),
-        "PASSWORD": str(os.getenv("DB_PASSWORD")),
-        "HOST": str(os.getenv("DB_HOST")),
-        "PORT": str(os.getenv("DB_PORT")),
+if DEVELOPMENT_MODE:
+    DATABASES = {
+        "default": {    
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": str(os.getenv("DB_NAME")),
+            "USER": str(os.getenv("DB_USER")),
+            "PASSWORD": str(os.getenv("DB_PASSWORD")),
+            "HOST": str(os.getenv("DB_HOST")),
+            "PORT": str(os.getenv("DB_PORT")),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {    
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": str(os.getenv("DEV_DB_NAME")),
+            "USER": str(os.getenv("DEV_DB_USER")),
+            "PASSWORD": str(os.getenv("DEV_DB_PASSWORD")),
+            "HOST": str(os.getenv("DEV_DB_HOST")),
+            "PORT": str(os.getenv("DEV_DB_PORT")),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
