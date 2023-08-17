@@ -9,5 +9,5 @@ AWS_S3_OBJECT_PARAMETERS = {
 }
 AWS_LOCATION = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
 
-DEFAULT_FILE_STORAGE = "ecommerce_api.cdn.backends.MediaRootS3Boto3Storage"
-STATICFILES_STORAGE = "ecommerce_api.cdn.backends.StaticRootS3Boto3Storage"
+DEFAULT_FILE_STORAGE = "api_ecommerce.cdn.backends.MediaRootS3Boto3Storage"
+STATICFILES_STORAGE = "api_ecommerce.cdn.backends.StaticRootS3Boto3Storage"
