@@ -24,7 +24,6 @@ CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", 'https://localhost:8000
 CORS_ALLOWED_CREDENTIALS = True
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
