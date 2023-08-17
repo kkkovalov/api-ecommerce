@@ -73,17 +73,28 @@ WSGI_APPLICATION = "api_ecommerce.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {    
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
-        "NAME": str(os.getenv("DB_NAME")),
-        "USER": str(os.getenv("DB_USER")),
-        "PASSWORD": str(os.getenv("DB_PASSWORD")),
-        "HOST": str(os.getenv("DB_HOST")),
-        "PORT": str(os.getenv("DB_PORT")),
+if DEVELOPMENT_MODE:
+    DATABASES = {
+        "default": {    
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": str(os.getenv("DB_NAME")),
+            "USER": str(os.getenv("DB_USER")),
+            "PASSWORD": str(os.getenv("DB_PASSWORD")),
+            "HOST": str(os.getenv("DB_HOST")),
+            "PORT": str(os.getenv("DB_PORT")),
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {    
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": str(os.getenv("DB_NAME")),
+            "USER": str(os.getenv("DB_USER")),
+            "PASSWORD": str(os.getenv("PROD_DB_PASSWORD")),
+            "HOST": str(os.getenv("PROD_DB_HOST")),
+            "PORT": str(os.getenv("PROD_DB_PORT")),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -168,7 +179,6 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 DOMAIN = os.getenv("DOMAIN")
 SITE_NAME = "Ecommerce Store"
-
 
 # GOOGLE OAUTH2 SETTINGS
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY= os.getenv('GOOGLE_AUTH_KEY')
