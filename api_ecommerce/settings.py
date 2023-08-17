@@ -13,16 +13,17 @@ if os.path.isfile(dotenv_file):
     load_dotenv(dotenv_file)
     
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
-DEBUG = bool(os.environ.get("DJANGO_DEBUG", False))
-DEVELOPMENT_MODE = bool(os.getenv('DEVELOPMENT_MODE', default=False))
-
-ALLOWED_HOSTS = ['*']
+DEBUG = os.environ.get("DJANGO_DEBUG", default='False') == 'False'
+DEVELOPMENT_MODE = os.getenv('DEVELOPMENT_MODE', default='False') == 'False'
+if DEVELOPMENT_MODE:
+    ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", default="http://127.0.0.1:8000").split(',')
+else:
+    ALLOWED_HOSTS = ['*']
 
 CORS_ALLOWED_ORIGINS = os.getenv("CORS_ALLOWED_ORIGINS", 'https://localhost:8000,http://127.0.0.1:8000').split(',')
 CORS_ALLOWED_CREDENTIALS = True
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -88,11 +89,11 @@ else:
     DATABASES = {
         "default": {    
             "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": str(os.getenv("DB_NAME")),
-            "USER": str(os.getenv("DB_USER")),
-            "PASSWORD": str(os.getenv("PROD_DB_PASSWORD")),
-            "HOST": str(os.getenv("PROD_DB_HOST")),
-            "PORT": str(os.getenv("PROD_DB_PORT")),
+            "NAME": str(os.getenv("DEV_DB_NAME")),
+            "USER": str(os.getenv("DEV_DB_USER")),
+            "PASSWORD": str(os.getenv("DEV_DB_PASSWORD")),
+            "HOST": str(os.getenv("DEV_DB_HOST")),
+            "PORT": str(os.getenv("DEV_DB_PORT")),
         }
     }
 
