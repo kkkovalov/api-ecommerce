@@ -5,3 +5,8 @@ from webstore.models import Product, Brand, Category, Basket
 
 class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug_name": ["name"]}
+    
+    
+class BrandAdmin(admin.ModelAdmin):
+    prepopulated_fields = {"slug_name": ["name"]}
+    

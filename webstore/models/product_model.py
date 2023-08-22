@@ -5,7 +5,7 @@ from webstore.models import Category, Brand
 
 class Product(models.Model):
     name = models.CharField(max_length=255, verbose_name='Product name', blank=False, null=False)
-    slug_name = models.SlugField(verbose_name='Slug name', max_length=255, blank=False, null=False)
+    slug_name = models.SlugField(verbose_name='Slug name', max_length=255, blank=False, null=False, unique=True)
     type = models.CharField(max_length=255, verbose_name='Type of product', blank=False, null=False)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Product category')
     brand = models.ForeignKey(Brand, on_delete=models.CASCADE, verbose_name='Product brand')

@@ -1,5 +1,5 @@
 from .product_model import *
-
+from .brand_model import *
 # Basic models of webstore
 
 
@@ -16,11 +16,7 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
-class Brand(models.Model):
-    name = models.CharField(max_length=255, blank=False, verbose_name='Brand name')
-    # category = 
-    description = models.TimeField(max_length=1020, verbose_name='Description')
-    
+
     
 class Pictures(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Product")
