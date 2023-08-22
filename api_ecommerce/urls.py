@@ -23,8 +23,8 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', index, name='index-view'),
-    path('', include('webstore.urls'), name='Webstore home view'),
     
+    path('webstore/', include('webstore.urls'), name='webstore-page'),
     
     # Docs config
     path('swagget<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),

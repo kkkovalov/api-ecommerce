@@ -8,6 +8,8 @@ AWS_S3_OBJECT_PARAMETERS = {
     "CacheControl": "max-age=86400",
 }
 AWS_LOCATION = f"https://{AWS_STORAGE_BUCKET_NAME}.nyc3.digitaloceanspaces.com"
-
+STATIC_URL = f"https://{AWS_S3_ENDPOINT_URL}/static/"
+PUBLIC_MEDIA_LOCATION = 'media'
+MEDIA_URL = f'https://{AWS_S3_ENDPOINT_URL}/{PUBLIC_MEDIA_LOCATION}/'
 DEFAULT_FILE_STORAGE = "api_ecommerce.cdn.backends.MediaRootS3Boto3Storage"
 STATICFILES_STORAGE = "api_ecommerce.cdn.backends.StaticRootS3Boto3Storage"

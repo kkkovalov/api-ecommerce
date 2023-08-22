@@ -1,8 +1,9 @@
 from django.urls import path, include
-from webstore.views import HomeView
+from webstore.views import HomeView, CategoryViews
 
 
 urlpatterns = [
-    path('home/', HomeView.as_view(), name='index'),
+    path('', HomeView.as_view(), name='index'),
+    path('category/', CategoryViews.as_view(), name='category-views'),
 ]
 
