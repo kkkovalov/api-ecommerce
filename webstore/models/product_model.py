@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 
-from webstore.models import Category, Brand
+from webstore.models import Brand, Category
 
 class Product(models.Model):
     name = models.CharField(max_length=255, verbose_name='Product name', blank=False, null=False)

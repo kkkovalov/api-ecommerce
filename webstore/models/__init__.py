@@ -1,22 +1,12 @@
-from .product_model import *
-from .brand_model import *
+from .category_model import Category
+from .brand_model import Brand
+from .product_model import Product
 # Basic models of webstore
-
 
 # [ ] - create a filesystem to hold pictures 
 import os
 from django.db import models
 from django.conf import settings
-
-
-class Category(models.Model):
-    name = models.CharField(max_length=255, blank=False, null=False, verbose_name='Category name')
-    description = models.TextField(max_length=1020, blank=True, null=False, default='', verbose_name='Category description')
-    
-    def __str__(self):
-        return self.name
-
-
     
 class Pictures(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Product")

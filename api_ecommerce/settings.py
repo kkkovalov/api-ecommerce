@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     "corsheaders",
     'social_django',
+    "webstore",
 ]
 
 MIDDLEWARE = [
