@@ -9,12 +9,14 @@ from drf_yasg.utils import swagger_auto_schema
 from webstore.models import Category
 from webstore.serializers import CategorySerializer
 
+from webstore.views.schema_responses import category_respones
+
 class CategoryPermission(BasePermission):
     def has_permission(self, request, view):
         if request.method == 'GET':
             return True
         else:
-            if request.user.is_authenticated:
+            if request.user.is_authenticated and request.user.is_staff:
                 return True
             else:
                 return False
@@ -22,10 +24,14 @@ class CategoryPermission(BasePermission):
 class CategoryViews(APIView):
     permission_classes = [CategoryPermission]
     
-    @swagger_auto_schema(operation_description='Returns all categories from the database, no filter', operation_id='Get categories', responses={404: "Unable to fetch categories", 200: "OK"})
+    
+    @swagger_auto_schema(
+        operation_description='Returns all categories from the database, no filter',
+        operation_id='Get categories',
+        responses=category_respones.get_responses
+    )
     def get(self, request, *args, **kwargs):
-        """
-        Get request will return all categories listed in the database. Names only. No body or parameters required.
+        """Returns all categories from the database in alphabetic order. No body or parameters required.
         
         Request:
             None
@@ -35,36 +41,24 @@ class CategoryViews(APIView):
             detail: success
             categories: JSON object
         """
+        
         try:
             categories = Category.objects.all()
         except:
             raise exceptions.NotFound
         
         serializer = CategorySerializer(categories, many=True)
-        
-        context = {
-            'detail': 'success',
-            'categories': serializer.data,
-        }
-        return Response(context, status=status.HTTP_200_OK)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
     
-    category_post_response_schema = {
-        status.HTTP_200_OK: openapi.Response(
-            description = "Category added to the database",
-            schema = CategorySerializer(many=True),
-            examples = {
-                "application/json": {
-                    "detail": "success",
-                    "categories": ["list of categories"]
-                }
-            }
-        ),
-        status.HTTP_406_NOT_ACCEPTABLE: openapi.Response(
-            description = 'denied'
-        )
-    }
-    
-    @swagger_auto_schema(operation_description='Returns a newly created category if successful, otherwise raises an error.', operation_id='Add category', request_body=CategorySerializer, responses=category_post_response_schema)
+# ------------------------------------------------------------------------------------------------------------------------
+
+    @swagger_auto_schema(
+        operation_description='Returns a newly created category if successful, otherwise raises an error.',
+        operation_id='Add category. STAFF ONLY.',
+        request_body=CategorySerializer,
+        responses=category_respones.post_responses
+    )    
     def post(self, request, *args, **kwargs):
         """Add a new category to the database.
 
@@ -77,25 +71,27 @@ class CategoryViews(APIView):
         Returns:
             _type_: _description_
         """
+        
         try:
             request.data["name"]
             request.data["description"]
         except:
-            return Response({'detail': 'Request body is missing information'}, status=status.HTTP_428_PRECONDITION_REQUIRED)
+            return Response({'detail': 'Request body is missing information'}, status=status.HTTP_400_BAD_REQUEST)
+        
         serializer = CategorySerializer(data=request.data)
-        
         serializer.is_valid(raise_exception=True)
-        
         serializer.save()
+        
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-        context = {
-            'detail': 'success',
-            'category': serializer.data
-        }
-        return Response(context, status=status.HTTP_200_OK)
+# ------------------------------------------------------------------------------------------------------------------------
+
+
+class ExistingCategoryView(APIView):
+    permission_classes = [CategoryPermission]
     
-    def put(self, request, *args, **kwargs):
-        pass
-    
-    def delete(self, request, *args, **kwargs):
+    @swagger_auto_schema(
+        operation_description = 'Returns a category based on '
+    )
+    def get(self, request, *args, **kwargs):
         pass
