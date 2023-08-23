@@ -10,8 +10,15 @@ from rest_framework import status
 
 from djoser.social.views import ProviderAuthView
 
+from drf_yasg.utils import swagger_auto_schema
+
+
 class CustomTokenObtainPairView(TokenObtainPairView):
     
+    @swagger_auto_schema(
+    operation_description  = "Login authentication method using JWToken",
+    operation_id = "Login",
+    )
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         
@@ -41,6 +48,11 @@ class CustomTokenObtainPairView(TokenObtainPairView):
     
 
 class CustomTokenRefreshView(TokenRefreshView):
+    
+    @swagger_auto_schema(
+        operation_id = "Refresh JWT",
+        operation_description = "Refresh Access JWToken using refresh token specified in either HTTP cookie or body.",
+    )
     def post(self, request, *args, **kwargs):        
         refresh_token = request.COOKIES.get('refresh')
         
@@ -67,6 +79,10 @@ class CustomTokenRefreshView(TokenRefreshView):
     
 class CustomTokenVerifyView(TokenVerifyView):
     
+    @swagger_auto_schema(
+        operation_id = "Verify JWT",
+        operation_description = "Verifies that current access token is valid",
+    )
     def post(self, request, *args, **kwargs):
         access_token = request.COOKIES.get('access')
         
@@ -77,6 +93,10 @@ class CustomTokenVerifyView(TokenVerifyView):
     
     
 class LogoutView(APIView):
+    @swagger_auto_schema(
+        operation_id = "Logout",
+        operation_description = "Logout user by deleting the HTTP response cookie.",
+    )
     def post(self, request, *args, **kwargs):
         response = Response(status=status.HTTP_204_NO_CONTENT)
         response.delete_cookie('access')
@@ -87,6 +107,10 @@ class LogoutView(APIView):
 
 class CustomProviderAuthView(ProviderAuthView):
     
+    @swagger_auto_schema(
+        operation_id = "OAuth login",
+        operation_description = "OAuth login endpoint for registering with Facebook or Google.",
+    )
     def post(self, request, *args, **kwargs):
         response = super().post(request, *args, **kwargs)
         
