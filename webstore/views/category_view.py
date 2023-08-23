@@ -28,7 +28,8 @@ class CategoryViews(APIView):
     @swagger_auto_schema(
         operation_description='Returns all categories from the database, no filter',
         operation_id='Get categories',
-        responses=category_respones.get_responses
+        responses=category_respones.get_responses,
+        manual_parameters = [openapi.Parameter(name="slug",description="If specified will return a single category",  required = False, in_ = openapi.IN_QUERY, type = openapi.TYPE_STRING)]
     )
     def get(self, request, *args, **kwargs):
         """Returns all categories from the database in alphabetic order. No body or parameters required.
@@ -42,14 +43,26 @@ class CategoryViews(APIView):
             categories: JSON object
         """
         
-        try:
-            categories = Category.objects.all()
-        except:
-            raise exceptions.NotFound
-        
-        serializer = CategorySerializer(categories, many=True)
+        if "slug" in request.query_params:
+            try:
+                query_slug = request.query_params["slug"]
+                category = Category.objects.get(slug_name=query_slug)
+            except:
+                raise exceptions.NotFound
+            
+            serializer = CategorySerializer(category)
+            
+            return Response(serializer.data, status=status.HTTP_200_OK)
+            
+        else:
+            try:
+                categories = Category.objects.all()
+            except:
+                raise exceptions.NotFound
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer = CategorySerializer(categories, many=True)
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
     
 # ------------------------------------------------------------------------------------------------------------------------
 
@@ -86,12 +99,22 @@ class CategoryViews(APIView):
 
 # ------------------------------------------------------------------------------------------------------------------------
 
-
-class ExistingCategoryView(APIView):
-    permission_classes = [CategoryPermission]
-    
     @swagger_auto_schema(
-        operation_description = 'Returns a category based on '
+    operation_description="Updates an existing category based on 'slug' query parameter.",
+    operation_id = 'Update category. STAFF ONLY.',
+    request_body = CategorySerializer,
+    responses = category_respones.put_responses,
+    manual_parameters = [openapi.Parameter(name="slug", required = True, in_ = openapi.IN_QUERY, type = openapi.TYPE_STRING)]
     )
-    def get(self, request, *args, **kwargs):
-        pass
+    def put(self, request, *args, **kwargs):
+        if "slug" in request.query_params:
+            try:
+                category = Category.objects.get(slug_name=request.query_params["slug"])
+            except:
+                raise exceptions.NotFound
+            serializer = CategorySerializer(category, data=request.data, partial=True)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            raise exceptions.NotFound
