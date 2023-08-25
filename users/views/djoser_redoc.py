@@ -35,4 +35,4 @@ class CustomUserViewset(DjoserViewSet):
     )
     @action(["get", "put", "patch", "delete"], detail=False)
     def me(self, request, *args, **kwargs):
-        return super().me(self, request, *args, **kwargs)
+        return super().me(request, *args, **kwargs)
