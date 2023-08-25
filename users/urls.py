@@ -5,7 +5,7 @@ from users.views import (
     LogoutView,
     CustomProviderAuthView,
 )
-from django.urls import path, include, re_path
+from django.urls import path, re_path
 
 urlpatterns = [
     path('jwt/create/', CustomTokenObtainPairView.as_view(), name='login-view'),
