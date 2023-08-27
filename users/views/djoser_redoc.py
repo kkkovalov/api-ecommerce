@@ -6,6 +6,7 @@ from rest_framework import status
 
 class CustomUserViewset(DjoserViewSet):
     
+# ---------------------------------------------------------------------------------------------------------
     @swagger_auto_schema(
         method='get',
         operation_id = "Get user info",
@@ -38,7 +39,7 @@ class CustomUserViewset(DjoserViewSet):
     def me(self, request, *args, **kwargs):
         return super().me(request, *args, **kwargs)
     
-    
+# ---------------------------------------------------------------------------------------------------------
     @swagger_auto_schema(
         method = "post",
         operation_id = "Activate user",
@@ -64,7 +65,8 @@ class CustomUserViewset(DjoserViewSet):
     @action(['post'], detail=False)
     def activation(self, request, *args, **kwargs):
         return super().activation(request, *args, **kwargs)
-    
+
+# ---------------------------------------------------------------------------------------------------------
     @swagger_auto_schema(
         method = 'post',
         operation_id = "Resend activation email",
@@ -89,37 +91,8 @@ class CustomUserViewset(DjoserViewSet):
     @action(methods=["post"], detail=False)
     def resend_activation(self, request, *args, **kwargs):
         return super().resend_activation(request, *args, **kwargs)
-    
-    @swagger_auto_schema(
-        method = 'post',
-        operation_id = "Reset email",
-        operation_description = "Use this endpoint to reset users email.",
-        reques_body = openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            properties = {
-                'email': openapi.Schema(type=openapi.TYPE_STRING),
-            }
-        ),
-        responses = {
-            status.HTTP_204_NO_CONTENT: openapi.Response(
-                description = 'OK. NO CONTENT.',
-            ),
-            status.HTTP_400_BAD_REQUEST: openapi.Response(
-                description = "EMAIL IS NOT IN THE DATABASE.",
-                schema = openapi.Schema(
-                    type = openapi.TYPE_OBJECT,
-                    properties = {
-                        'email': openapi.Schema(type=openapi.TYPE_STRING),
-                    },
-                )
-            )
-        }
-    )
-    @action(methods=['post'], detail=False)
-    def reset_username(self, request, *args, **kwargs):
-        return super().reset_username(request, *args, **kwargs)
 
-    
+# ---------------------------------------------------------------------------------------------------------
     @swagger_auto_schema(
         method = 'post',
         operation_id = 'Set new password',
@@ -154,8 +127,7 @@ class CustomUserViewset(DjoserViewSet):
     def set_password(self, request, *args, **kwargs):
         return super().set_password(request, *args, **kwargs)    
     
-    
-    
+# ---------------------------------------------------------------------------------------------------------
     @swagger_auto_schema(
         method = 'post',
         operation_id = "Reset password",
@@ -179,3 +151,49 @@ class CustomUserViewset(DjoserViewSet):
     @action(methods = ['post'], detail=False)
     def reset_password(self, request, *args, **kwargs):
         return super().reset_password(request, *args, **kwargs)
+
+# ---------------------------------------------------------------------------------------------------------
+    @swagger_auto_schema()
+    def reset_password_confirm(self, request, *args, **kwargs):
+        return super().reset_password_confirm(request, *args, **kwargs)    
+
+# ---------------------------------------------------------------------------------------------------------
+    @swagger_auto_schema()
+    def set_username(self, request, *args, **kwargs):
+        return super().set_username(request, *args, **kwargs)
+    
+    
+# ---------------------------------------------------------------------------------------------------------
+    @swagger_auto_schema(
+        method = 'post',
+        operation_id = "Reset email",
+        operation_description = "Use this endpoint to reset users email.",
+        reques_body = openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            properties = {
+                'email': openapi.Schema(type=openapi.TYPE_STRING),
+            }
+        ),
+        responses = {
+            status.HTTP_204_NO_CONTENT: openapi.Response(
+                description = 'OK. NO CONTENT.',
+            ),
+            status.HTTP_400_BAD_REQUEST: openapi.Response(
+                description = "EMAIL IS NOT IN THE DATABASE.",
+                schema = openapi.Schema(
+                    type = openapi.TYPE_OBJECT,
+                    properties = {
+                        'email': openapi.Schema(type=openapi.TYPE_STRING),
+                    },
+                )
+            )
+        }
+    )
+    @action(methods=['post'], detail=False)
+    def reset_username(self, request, *args, **kwargs):
+        return super().reset_username(request, *args, **kwargs)
+
+# ---------------------------------------------------------------------------------------------------------
+    @swagger_auto_schema()
+    def reset_username_confirm(self, request, *args, **kwargs):
+        return super().reset_username_confirm(request, *args, **kwargs)
