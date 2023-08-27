@@ -15,6 +15,7 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = bool(os.environ.get("DJANGO_DEBUG", False))
 DEVELOPMENT_MODE = bool(os.getenv('DEVELOPMENT_MODE', default=False))
+LOCAL_DEV = bool(os.getenv('LOCAL_DEV', default=False))
 
 ALLOWED_HOSTS = ['*']
 
@@ -73,7 +74,7 @@ WSGI_APPLICATION = "api_ecommerce.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-if DEVELOPMENT_MODE:
+if DEVELOPMENT_MODE and not LOCAL_DEV:
     DATABASES = {
         "default": {    
             "ENGINE": "django.db.backends.postgresql_psycopg2",
@@ -82,6 +83,17 @@ if DEVELOPMENT_MODE:
             "PASSWORD": str(os.getenv("DB_PASSWORD")),
             "HOST": str(os.getenv("DB_HOST")),
             "PORT": str(os.getenv("DB_PORT")),
+        }
+    }
+elif LOCAL_DEV:
+    DATABASES = {
+        "default": {    
+            "ENGINE": "django.db.backends.postgresql_psycopg2",
+            "NAME": str(os.getenv("LOCAL_DB_NAME")),
+            "USER": str(os.getenv("LOCAL_DB_USER")),
+            "PASSWORD": str(os.getenv("LOCAL_DB_PASSWORD")),
+            "HOST": str(os.getenv("LOCAL_DB_HOST")),
+            "PORT": int(os.getenv("LOCAL_DB_PORT")),
         }
     }
 else:
@@ -164,13 +176,15 @@ AUTHENTICATION_BACKENDS = [
 
 # DJOSER SETTINGS
 DJOSER = {
-    "PASSWORD_RESET_CONFIRM_URL": "password-reset/{uid}/{token}",
-    "ACTIVATION_URL": "#/activation/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": True,
+    "ACTIVATION_URL": "#/activation/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "#/password-reset/{uid}/{token}",
+    "SET_PASSWORD_RETYPE": True,
     "USER_CREATE_PASSWORD_RETYPE": True,
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
     "TOKEN_MODEL": None,
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': os.getenv('REDIRECT_URLS')
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': os.getenv('REDIRECT_URIS'),
+    
 }
 
 EMAIL_HOST = os.getenv('EMAIL_HOST')
