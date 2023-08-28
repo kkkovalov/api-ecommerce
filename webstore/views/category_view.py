@@ -24,23 +24,32 @@ class CategoryPermission(BasePermission):
 class CategoryViews(APIView):
     permission_classes = [CategoryPermission]
     
-    
     @swagger_auto_schema(
-        operation_description='Returns all categories from the database, no filter',
+        operation_description='Use this endpoint to get all categories from the database. If {slug} specified in query, will return specific category',
         operation_id='Get categories',
         responses=category_respones.get_responses,
-        manual_parameters = [openapi.Parameter(name="slug",description="If specified will return a single category",  required = False, in_ = openapi.IN_QUERY, type = openapi.TYPE_STRING)]
+        manual_parameters = [
+            openapi.Parameter(
+                name="slug",
+                description="If specified will return a single category",
+                required = False,
+                in_ = openapi.IN_QUERY,
+                type = openapi.TYPE_STRING
+                )
+            ]
     )
     def get(self, request, *args, **kwargs):
         """Returns all categories from the database in alphabetic order. No body or parameters required.
         
         Request:
             None
+            
+        Query:
+            <slug> - optional
         
         Response:
             status: 200 - OK
-            detail: success
-            categories: JSON object
+            Array [ ..categories.. ]
         """
         
         if "slug" in request.query_params:
@@ -67,7 +76,7 @@ class CategoryViews(APIView):
 # ------------------------------------------------------------------------------------------------------------------------
 
     @swagger_auto_schema(
-        operation_description='Returns a newly created category if successful, otherwise raises an error.',
+        operation_description='Use this endpoint to add new categories.',
         operation_id='Add category. STAFF ONLY.',
         request_body=CategorySerializer,
         responses=category_respones.post_responses
@@ -78,11 +87,9 @@ class CategoryViews(APIView):
         Request:
             string: name
             string: description
+            
         REQUEST_COOKIES:
             string: access
-
-        Returns:
-            _type_: _description_
         """
         
         try:
@@ -95,7 +102,7 @@ class CategoryViews(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 # ------------------------------------------------------------------------------------------------------------------------
 
@@ -118,3 +125,34 @@ class CategoryViews(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             raise exceptions.NotFound
+        
+# ------------------------------------------------------------------------------------------------------------------------
+    @swagger_auto_schema(
+        operation_id = "Delete category. STAFF ONLY.",
+        operation_description = "Use this endpoint to delete a category.",
+        manual_parameters = [
+            openapi.Parameter(
+                name='slug',
+                required=True,
+                in_=openapi.IN_QUERY,
+                type=openapi.TYPE_STRING
+            ),
+        ]
+    )
+    def delete(self, request, *args, **kwargs):
+        """Function to delete a category specified in the <slug> query field.
+
+        Query:
+            string: slug
+        """
+        if 'slug' in request.query_params:
+            try:
+                category = Category.objects.get(slug_name=request.query_params['slug'])
+            except:
+                raise exceptions.NotFound
+            
+            category.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            raise exceptions.NotFound
+        

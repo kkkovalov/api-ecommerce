@@ -12,7 +12,6 @@ get_responses = {
                         "name": "string",
                         "description": "string",
                         "slug_name": "string",
-
             }
         }
     ),
@@ -22,16 +21,8 @@ get_responses = {
 }
 
 post_responses = {
-    status.HTTP_200_OK: openapi.Response(
+    status.HTTP_204_NO_CONTENT: openapi.Response(
         description = "Category added to the database",
-        schema = CategorySerializer,
-        examples = {
-            "application/json": {
-                    "name": "string",
-                    "description": "string",
-                    "slug_name": "string",
-            }
-        }
     ),
     status.HTTP_400_BAD_REQUEST: openapi.Response(
         description = 'Missing name or description to create a new category. Otherwise, not valid data.',
