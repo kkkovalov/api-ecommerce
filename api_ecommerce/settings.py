@@ -79,22 +79,22 @@ if DEVELOPMENT_MODE:
     DATABASES = {
         "default": {    
             "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": str(os.getenv("DB_NAME")),
-            "USER": str(os.getenv("DB_USER")),
-            "PASSWORD": str(os.getenv("DB_PASSWORD")),
-            "HOST": str(os.getenv("DB_HOST")),
-            "PORT": str(os.getenv("DB_PORT")),
+            "NAME": str(os.getenv("DEV_DB_NAME")),
+            "USER": str(os.getenv("DEV_DB_USER")),
+            "PASSWORD": str(os.getenv("DEV_DB_PASSWORD")),
+            "HOST": str(os.getenv("DEV_DB_HOST")),
+            "PORT": str(os.getenv("DEV_DB_PORT")),
         }
     }
 else:
     DATABASES = {
         "default": {    
             "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": str(os.getenv("DEV_DB_NAME")),
-            "USER": str(os.getenv("DEV_DB_USER")),
-            "PASSWORD": str(os.getenv("DEV_DB_PASSWORD")),
-            "HOST": str(os.getenv("DEV_DB_HOST")),
-            "PORT": str(os.getenv("DEV_DB_PORT")),
+            "NAME": str(os.getenv("PROD_DB_NAME")),
+            "USER": str(os.getenv("PROD_DB_USER")),
+            "PASSWORD": str(os.getenv("PROD_DB_PASSWORD")),
+            "HOST": str(os.getenv("PROD_DB_HOST")),
+            "PORT": str(os.getenv("PROD_DB_PORT")),
         }
     }
 
@@ -167,13 +167,15 @@ AUTHENTICATION_BACKENDS = [
 
 # DJOSER SETTINGS
 DJOSER = {
-    "PASSWORD_RESET_CONFIRM_URL": "password-reset/{uid}/{token}",
-    "ACTIVATION_URL": "#/activation/{uid}/{token}",
     "SEND_ACTIVATION_EMAIL": True,
+    "ACTIVATION_URL": "#/activation/{uid}/{token}",
+    "PASSWORD_RESET_CONFIRM_URL": "#/password-reset/{uid}/{token}",
+    "SET_PASSWORD_RETYPE": True,
     "USER_CREATE_PASSWORD_RETYPE": True,
     "PASSWORD_RESET_CONFIRM_RETYPE": True,
     "TOKEN_MODEL": None,
-    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': os.getenv('REDIRECT_URLS')
+    'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': os.getenv('REDIRECT_URIS'),
+    
 }
 
 EMAIL_HOST = os.getenv('EMAIL_HOST')
@@ -203,7 +205,6 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': 'id,name,email', 
 }
 SOCIAL_AUTH_FACEBOOK_API_VERSION = '17.0'
-
 
 
 #  COOKIES SETTINGS
