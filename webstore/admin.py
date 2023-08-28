@@ -8,8 +8,8 @@ class CategoryAdmin(admin.ModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug_name": ["name"]}
-    
-    
+
+@admin.register(Brand)    
 class BrandAdmin(admin.ModelAdmin):
     prepopulated_fields = {"slug_name": ["name"]}
 

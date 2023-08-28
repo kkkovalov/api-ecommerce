@@ -1,1 +1,2 @@
-from .category_serializer import CategorySerializer
+from .category_serializer import *
+from .brand_serializer import *
