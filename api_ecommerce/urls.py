@@ -32,7 +32,6 @@ urlpatterns = [
     path('docs/', schema_view.with_ui('redoc', cache_timeout=0,), name='schema-redoc'),
     
     #Djoser & JWT Auth
-    path("api/", include("djoser.urls")),
     path("api/", include("users.urls"), name='API-endpoint'),
     path('auth/', include('users.social.urls'), name='OAuth-endpoint'),
 ]

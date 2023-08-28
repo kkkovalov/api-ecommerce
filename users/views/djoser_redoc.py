@@ -111,6 +111,42 @@ class CustomUserViewset(DjoserViewSet):
     @action(methods=["post"], detail=False)
     def resend_activation(self, request, *args, **kwargs):
         return super().resend_activation(request, *args, **kwargs)
+    
+# ---------------------------------------------------------------------------------------------------------
+    @swagger_auto_schema(
+        method = 'post',
+        operation_id='Reset email confirmation',
+        operation_description='Use this endpoint to confirm email reset.',
+        request_body = openapi.Schema(
+            type = openapi.TYPE_OBJECT,
+            description = 'activation request body',
+            properties = {
+                "uid": openapi.Schema(type=openapi.TYPE_STRING, title="user identifier, usually two letters, first part of url"),
+                "token": openapi.Schema(type=openapi.TYPE_STRING, title='token, second part of activation url'),
+                'new_email': openapi.Schema(type=openapi.TYPE_STRING, title='new email'),
+            },
+            required = ['uid', 'token', 'new_email'],
+        ),
+        responses = {
+            status.HTTP_204_NO_CONTENT: openapi.Response(
+                description="OK. NO CONTENT."
+            ),
+            status.HTTP_400_BAD_REQUEST: openapi.Response(
+                description='BAD REQUEST',
+                schema = openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties = {
+                        "uid": openapi.Schema(type=openapi.TYPE_STRING, title="user identifier, usually two letters, first part of url"),
+                        "token": openapi.Schema(type=openapi.TYPE_STRING, title='token, second part of activation url'),
+                        'new_email': openapi.Schema(type=openapi.TYPE_STRING, title='new email'),
+                    },
+                )
+            )
+        }
+    )
+    @action(methods=['post'], detail=False, url_path='reset_email_confirm')
+    def reset_username_confirm(self, request, *args, **kwargs):
+        return super().reset_username_confirm(request, *args, **kwargs)
 
 # ---------------------------------------------------------------------------------------------------------
     @swagger_auto_schema(
@@ -136,12 +172,29 @@ class CustomUserViewset(DjoserViewSet):
     @action(methods = ['post'], detail=False)
     def reset_password(self, request, *args, **kwargs):
         return super().reset_password(request, *args, **kwargs)
+    
+# ---------------------------------------------------------------------------------------------------------
+    @swagger_auto_schema(
+        operation_id = 'Reset password confirmation',
+        operation_description = 'Use this endpoint to confirm password reset.',
+        responses = {
+            status.HTTP_204_NO_CONTENT: openapi.Response(
+                description = 'OK. NO CONTENT.'
+            ),
+            status.HTTP_400_BAD_REQUEST: openapi.Response(
+                description = "BAD REQUEST.",
+            ),
+        }
+    )
+    @action(methods=['post'], detail=False)
+    def reset_password_confirm(self, request, *args, **kwargs):
+        return super().reset_password_confirm(request, *args, **kwargs)
 
 # ---------------------------------------------------------------------------------------------------------
     @swagger_auto_schema(
         method = 'post',
         operation_id = "Reset email",
-        operation_description = "Use this endpoint to reset users email.",
+        operation_description = 'Use this endpoint to reset users email. \n Client will receive a "reset_email/{uid}/{token}/" email by pressing it they should be redirected to your front-end page, which makes a "POST" request to confirm email reset.',
         reques_body = openapi.Schema(
             type=openapi.TYPE_OBJECT,
             properties = {
@@ -163,10 +216,26 @@ class CustomUserViewset(DjoserViewSet):
             )
         }
     )
-    @action(methods=['post'], detail=False)
+    @action(methods=['post'], detail=False, url_path='reset_email')
     def reset_username(self, request, *args, **kwargs):
         return super().reset_username(request, *args, **kwargs)
 
+# ---------------------------------------------------------------------------------------------------------
+    @swagger_auto_schema(
+        operation_id='Set new email',
+        operation_description = 'Use this endpoint to set new password for the user',
+        responses = {
+            status.HTTP_204_NO_CONTENT: openapi.Response(
+                description = 'OK. NO CONTENT.'
+            ),
+            status.HTTP_400_BAD_REQUEST: openapi.Response(
+                description = "BAD REQUEST.",
+            ),
+        }
+    )
+    @action(methods=['post'], detail=False, url_path='set_email')
+    def set_username(self, request, *args, **kwargs):
+        return super().set_username(request, *args, **kwargs)
 
 # ---------------------------------------------------------------------------------------------------------
     @swagger_auto_schema(
