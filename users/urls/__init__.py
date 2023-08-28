@@ -3,7 +3,6 @@ from users.views import (
     CustomTokenVerifyView,
     CustomTokenRefreshView,
     LogoutView,
-    CustomProviderAuthView,
     CustomUserViewset,
 )
 from django.urls import path, re_path, include
@@ -17,12 +16,10 @@ router = DefaultRouter()
 router.register("users", CustomUserViewset)
 User = get_user_model()
 
-
 urlpatterns = [
     # redoc documentation add
     path('jwt/create/', CustomTokenObtainPairView.as_view(), name='login-view'),
     path('jwt/refresh/', CustomTokenRefreshView.as_view()),
     path('jwt/verify/', CustomTokenVerifyView.as_view()),
     path('logout/', LogoutView.as_view()),
-    re_path(r'^o/(?P<provider>\S+)/$', CustomProviderAuthView.as_view(), name='Provider Auth'),
 ] + router.urls

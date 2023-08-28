@@ -25,9 +25,9 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('swagget<format>/', schema_view.without_ui(cache_timeout=0), name='schema-json'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
-    path('docs/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+    path('docs/', schema_view.with_ui('redoc', cache_timeout=0,), name='schema-redoc'),
     
     # path("api/", include("djoser.urls")),
-    path("api/", include("users.urls")),
-    path('auth/', include('djoser.social.urls')),
+    path("api/", include("users.urls"), name='API-endpoint'),
+    path('auth/', include('users.social.urls'), name='OAuth-endpoint'),
 ]
