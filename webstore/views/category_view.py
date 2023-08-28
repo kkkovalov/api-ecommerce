@@ -6,23 +6,14 @@ from rest_framework.permissions import IsAuthenticated, BasePermission
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
+from webstore.permissions import AdminPermission
 from webstore.models import Category
 from webstore.serializers import CategorySerializer
-
 from webstore.views.schema_responses import category_respones
 
-class CategoryPermission(BasePermission):
-    def has_permission(self, request, view):
-        if request.method == 'GET':
-            return True
-        else:
-            if request.user.is_authenticated and request.user.is_staff:
-                return True
-            else:
-                return False
 
 class CategoryViews(APIView):
-    permission_classes = [CategoryPermission]
+    permission_classes = [AdminPermission]
     
     @swagger_auto_schema(
         operation_description='Use this endpoint to get all categories from the database. If {slug} specified in query, will return specific category',
@@ -137,7 +128,12 @@ class CategoryViews(APIView):
                 in_=openapi.IN_QUERY,
                 type=openapi.TYPE_STRING
             ),
-        ]
+        ],
+        responses = {
+            status.HTTP_204_NO_CONTENT: openapi.Response(
+                description = "OK. NO CONTENT."
+            )
+        }
     )
     def delete(self, request, *args, **kwargs):
         """Function to delete a category specified in the <slug> query field.
@@ -154,5 +150,5 @@ class CategoryViews(APIView):
             category.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
         else:
-            raise exceptions.NotFound
+            raise exceptions.ValidationError
         

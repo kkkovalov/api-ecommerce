@@ -1,12 +1,23 @@
 from .category_model import Category
 from .brand_model import Brand
 from .product_model import Product
+
 # Basic models of webstore
 
 # [ ] - create a filesystem to hold pictures 
 import os
 from django.db import models
 from django.conf import settings
+from django.dispatch import receiver
+from django.template.defaultfilters import slugify
+from django.db.models.signals import pre_save
+
+
+@receiver(pre_save, sender=Brand)
+@receiver(pre_save, sender=Category)
+def pre_save_slugify(sender, instance, *args, **kwargs):
+    if not instance.slug_name:
+        instance.slug_name = slugify(instance.name)
     
 class Pictures(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name="Product")

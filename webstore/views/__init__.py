@@ -1,5 +1,7 @@
 #package
-from .category_view import CategoryViews
+from .category_view import *
+from .brand_view import *
+
 
 from django.http import HttpResponse
 from rest_framework.response import Response
