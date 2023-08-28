@@ -15,7 +15,6 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = os.getenv("DJANGO_SECRET_KEY")
 DEBUG = bool(os.environ.get("DJANGO_DEBUG", False))
 DEVELOPMENT_MODE = bool(os.getenv('DEVELOPMENT_MODE', default=False))
-LOCAL_DEV = bool(os.getenv('LOCAL_DEV', default=False))
 
 ALLOWED_HOSTS = ['*']
 
@@ -74,34 +73,23 @@ WSGI_APPLICATION = "api_ecommerce.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-if DEVELOPMENT_MODE and not LOCAL_DEV:
+if DEVELOPMENT_MODE:
     DATABASES = {
         "default": {    
             "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": str(os.getenv("DB_NAME")),
-            "USER": str(os.getenv("DB_USER")),
-            "PASSWORD": str(os.getenv("DB_PASSWORD")),
-            "HOST": str(os.getenv("DB_HOST")),
-            "PORT": str(os.getenv("DB_PORT")),
-        }
-    }
-elif LOCAL_DEV:
-    DATABASES = {
-        "default": {    
-            "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": str(os.getenv("LOCAL_DB_NAME")),
-            "USER": str(os.getenv("LOCAL_DB_USER")),
-            "PASSWORD": str(os.getenv("LOCAL_DB_PASSWORD")),
-            "HOST": str(os.getenv("LOCAL_DB_HOST")),
-            "PORT": int(os.getenv("LOCAL_DB_PORT")),
+            "NAME": str(os.getenv("DEV_DB_NAME")),
+            "USER": str(os.getenv("DEV_DB_USER")),
+            "PASSWORD": str(os.getenv("DEV_DB_PASSWORD")),
+            "HOST": str(os.getenv("DEV_DB_HOST")),
+            "PORT": str(os.getenv("DEV_DB_PORT")),
         }
     }
 else:
     DATABASES = {
         "default": {    
             "ENGINE": "django.db.backends.postgresql_psycopg2",
-            "NAME": str(os.getenv("DB_NAME")),
-            "USER": str(os.getenv("DB_USER")),
+            "NAME": str(os.getenv("PROD_DB_NAME")),
+            "USER": str(os.getenv("PROD_DB_USER")),
             "PASSWORD": str(os.getenv("PROD_DB_PASSWORD")),
             "HOST": str(os.getenv("PROD_DB_HOST")),
             "PORT": str(os.getenv("PROD_DB_PORT")),
